@@ -4,7 +4,6 @@ author: '712538'
 date: "12 February 2017"
 output:
   html_document: default
-  pdf_document: default
 ---
 ## Hello Octocat
 I love Octocat. She's the coolest cat in town.
