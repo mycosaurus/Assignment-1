@@ -22,3 +22,39 @@ data(anscombe)
 plot(anscombe$x1, anscombe$y1)
 abline(lm(y1 ~ x1, data = anscombe))
 ```
+
+##importing csv data
+```{r data_import, echo=TRUE}
+df <- read.csv("https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/analgesic.csv")
+```
+
+##explore csv
+```{r data_summary, echo=TRUE}
+#dimensions
+dim(df)
+
+#column names
+colnames(df)
+
+#summarising
+head(df)
+tail(df)
+summary(df)
+```
+
+##tidying data
+```{r data_tidy, echo=TRUE}
+#loading libraries
+library(dplyr)
+library(tidyr)
+
+#wide to long format
+df_gathered <- gather(df, Measurement, Value, -ID, -Group)
+
+#grouping by subject ID
+df_grouped <- group_by(df_gathered, ID)
+
+#summarizing: mean measurements for each subject
+df_means <- summarize(df_grouped, mean(Value))
+print(df_means)
+```
