@@ -58,3 +58,63 @@ df_grouped <- group_by(df_gathered, ID)
 df_means <- summarize(df_grouped, mean(Value))
 print(df_means)
 ```
+
+
+#Data Set 1: Chicken Weights
+###Null hypothesis: There is no difference in weight according to feed type after six weeks
+###Alternative hypothesis: There is a difference in weight according to feed type after six weeks
+```{r chicken_weights, echo=TRUE}
+#loading data set
+chickweight <- read.csv("https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/chick-weights.csv?dl=1")
+
+#Explore chicken weight data set with plot
+plot(chickweight$feed, chickweight$weight, xlab = "Feed type", ylab = "Weight in grams")
+
+#Analysis with the Kruskal-Wallis test: Assumes that weights are not normally distributed, data is unmatched, errors are independent and that each group has the same distribution
+kruskal.test(weight ~ feed, data = chickweight)
+```
+###p-value<0.05, therefore the null hypothesis is rejected: weight of chicken is associated with feed type
+
+
+#Data Set 2: The Hot Zone
+###Null hypothesis: Proportion of ill people is independent of water intake
+###Alternative hypothesis: Proportion of ill people is not independent of water intake
+```{r water_contam, echo=TRUE}
+#loading data set
+gastro <- read.csv("https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/gastroenteritis.csv?dl=1")
+
+#exploratory plot
+plot(gastro)
+
+#contingency table of data
+gastro_tbl <- table(gastro$Consumption, gastro$Outcome)
+gastro_tbl
+
+#analysis of independence by Chi-Squared Test: Assumes sample size is sufficiently large that expected values are > 5, and that data is unpaired
+chisq.test(gastro_tbl)
+```
+###p-value<0.05 therefore null hypothesis is rejected: proportion of ill people is associated with amount of water intake
+
+#Data Set 3: Nausea
+###Null hypothesis: There is no difference in nausea ratings before vs after administration of the 5HT3 antagonist
+###Alternative hypothesis: There is a difference in nausea ratings before vs after administration of the 5HT3 antagonist
+```{r nausea, echo=TRUE}
+#loading data set
+nausea <- read.csv("https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/nausea.csv?dl=1")
+
+#removing outlier
+nausea_new <- subset(nausea, Nausea_after<=6, select=Patient:Nausea_after)
+nausea_new
+
+#creating a vector of means
+nmeans <- c(mean(nausea_new$Nausea_before), mean(nausea_new$Nausea_after))
+
+#bar plot of means
+names(nmeans) <- c("Nausea before", "Nausea after")
+barplot(nmeans)
+
+#analysis by Wilcoxon test: assumes data is non-parametric, data is paired, errors are independent and samples have same distribution
+wilcox.test(nausea_new$Nausea_before, nausea_new$Nausea_after, paired = TRUE)
+
+```
+###p-value<0.05 therefore null hypothesis is rejected: Nausea ratings before vs after administration are different
