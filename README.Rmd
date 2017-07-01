@@ -150,3 +150,35 @@ barplot(nmeans)
 wilcox.test(nausea_new$Nausea_before, nausea_new$Nausea_after, alternative="greater", paired = TRUE)
 #p-value<0.05 therefore null hypothesis is rejected: Nausea ratings before vs after adminstration are different, nausea ratings before are greater than those after
 ```
+
+
+##Data Set 4: Housing Prices
+```{r housing_prices, echo=TRUE}
+#loading data set
+hprices <- read.csv("https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/housing-prices.csv?dl=1")
+
+#exploratory plot
+plot(hprices)
+
+#Analysis by linear regression: assumes 
+#Null hypothesis: There is no relationship between median house price and interest rate
+#Alternative hypothesis: There is a relationship between median house price and interest rate
+Housemod <- lm(formula = median_house_price_USD ~ interest_rate, data = hprices)
+summary(Housemod)
+
+#Diagnostic plots: Homoskedasticity plot
+plot(x = Housemod$fitted, y = Housemod$residuals)
+abline(h = 0)
+
+#Diagnostic plot: Gaussian residual distribution
+qqnorm(Housemod$residuals)
+qqline(Housemod$residuals)
+
+#Analysis: Diagnostic plots show reasonably acceptable results. The R-value is low, indicating a weak association between the two variables, but the p-value is below 0.05, allowing the null hypothesis to be rejected. For a more convincing result, a larger data set would be helpful.
+
+#Scatterplot for "publication"
+library(ggplot2)
+ggplot(hprices, aes(x=interest_rate, y=median_house_price_USD))+geom_point(size=2, color="blue")+ggtitle("House Price vs Interest Rate")+labs(x="Interest Rate", y="House Price in US dollars")
+
+```
+
